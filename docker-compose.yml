@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: go-employee-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: employee_db
+    ports:
+      - "5432:5432"
+    networks:
+      - employee_net
+
+  go-app:
+    build: .
+    container_name: go-employee-app
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - employee_net
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin123
+      - POSTGRES_DB=employee_db
+
+networks:
+  employee_net:
